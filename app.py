@@ -1,4 +1,5 @@
 import os
+import json
 import threading
 import time
 from datetime import datetime, timedelta
@@ -72,6 +73,7 @@ def create_app():
         db.create_all()
         _ensure_schema()
         _ensure_poll_flags()
+        _bootstrap_seed_snapshot(app)
         if os.environ.get("BOOTSTRAP_DB_ON_STARTUP", "true").lower() == "true":
             seed_data(app)
 
@@ -115,6 +117,75 @@ def _ensure_poll_flags() -> None:
             updated = True
     if updated:
         db.session.commit()
+
+
+def _bootstrap_seed_snapshot(app: Flask) -> None:
+    snapshot_path = os.path.join(app.root_path, "services", "seed_snapshot.json")
+    if not os.path.exists(snapshot_path):
+        return
+
+    if User.query.count() > 0:
+        return
+
+    with open(snapshot_path, "r", encoding="utf-8") as handle:
+        snapshot = json.load(handle)
+
+    table_order = [
+        "user",
+        "match",
+        "player",
+        "poll",
+        "result",
+        "user_boost",
+        "roulette_spin",
+        "battle",
+        "match_standing",
+        "vote",
+        "admin_audit_log",
+    ]
+
+    for table_name in table_order:
+        rows = snapshot.get(table_name, [])
+        if not rows:
+            continue
+
+        table = db.metadata.tables.get(table_name)
+        if table is None:
+            continue
+
+        prepared_rows = []
+        for row in rows:
+            prepared = {}
+            for column in table.columns:
+                value = row.get(column.name)
+                if value is None:
+                    prepared[column.name] = None
+                    continue
+                if hasattr(column.type, "python_type"):
+                    try:
+                        py_type = column.type.python_type
+                    except NotImplementedError:
+                        py_type = None
+                else:
+                    py_type = None
+
+                if py_type is bool:
+                    prepared[column.name] = bool(value)
+                elif py_type is int:
+                    prepared[column.name] = int(value)
+                elif py_type is float:
+                    prepared[column.name] = float(value)
+                elif py_type is datetime:
+                    prepared[column.name] = datetime.fromisoformat(value)
+                elif column.name == "applied_vote_ids" and isinstance(value, str):
+                    prepared[column.name] = json.loads(value)
+                else:
+                    prepared[column.name] = value
+            prepared_rows.append(prepared)
+
+        db.session.execute(table.insert(), prepared_rows)
+
+    db.session.commit()
 
 
 def seed_data(app: Flask) -> None:
