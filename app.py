@@ -7,7 +7,7 @@ from flask_login import current_user
 from dotenv import load_dotenv
 from sqlalchemy import text
 from config import Config
-from models import db, login_manager
+from models import db, login_manager, migrate
 from models.user import User
 from models.match import Match
 from models.player import Player
@@ -36,6 +36,7 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    migrate.init_app(app, db)
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
@@ -71,9 +72,13 @@ def create_app():
         db.create_all()
         _ensure_schema()
         _ensure_poll_flags()
-        seed_data(app)
+        if os.environ.get("BOOTSTRAP_DB_ON_STARTUP", "true").lower() == "true":
+            seed_data(app)
 
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+    if (
+        os.environ.get("ENABLE_POLL_WORKER", "true").lower() == "true"
+        and os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+    ):
         thread = threading.Thread(target=_poll_lock_worker, args=(app,), daemon=True)
         thread.start()
 
@@ -189,4 +194,5 @@ def seed_data(app: Flask) -> None:
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG", "0") == "1")

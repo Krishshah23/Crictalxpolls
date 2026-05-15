@@ -45,3 +45,30 @@ Visit http://127.0.0.1:5000/login
 - Poll options can be sourced from Team A/Team B batsmen, bowlers, all rounders, or all players.
 - Avatars are uploaded from the Profile page and stored in static/uploads/avatars.
 - If you use a .env file, keep it local and out of source control.
+
+## Render Deployment
+
+This project includes `render.yaml` for one-click deployment on Render.
+
+Recommended environment variables:
+- `SECRET_KEY`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `DATABASE_URL` if you are not using the Render-managed database from `render.yaml`
+
+Build command:
+```bash
+pip install -r requirements.txt
+```
+
+Start command:
+```bash
+gunicorn app:app
+```
+
+Local port-aware run:
+```bash
+python app.py
+```
+
+The app will listen on `PORT` if it is set, otherwise it defaults to `5000`.

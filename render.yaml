@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: Crictalxpolls
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    autoDeploy: true
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: crictalxpolls-db
+          property: connectionString
+      - key: BOOTSTRAP_DB_ON_STARTUP
+        value: true
+      - key: ENABLE_POLL_WORKER
+        value: true
+
+databases:
+  - name: crictalxpolls-db
+    plan: free
