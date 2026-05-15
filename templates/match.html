@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="polls-header animate-in">
+    <div>
+        <div class="tag">Match Center</div>
+        <div class="polls-match-title">{{ match.display_name }}</div>
+        <div class="text-sm text-dim">{{ match.start_time_ist.strftime('%d %b %Y, %I:%M %p IST') }}</div>
+    </div>
+    {% if match.status == 'live' %}
+    <span class="badge badge-live"><span class="live-dot"></span>Live</span>
+    {% elif match.status == 'completed' %}
+    <span class="badge badge-ice">Completed</span>
+    {% else %}
+    <span class="badge badge-acid">Upcoming</span>
+    {% endif %}
+</div>
+
+{% if match.status == 'upcoming' %}
+<div class="card card-pad mb-2" data-countdown="{{ match.start_time_ist_timestamp }}">
+    <div class="tag">Polls lock in</div>
+    <div class="countdown" data-countdown-label>--:--:--</div>
+</div>
+{% endif %}
+
+{% set has_votes = user_votes|length > 0 %}
+<form method="POST" action="{{ url_for('polls.vote_match', match_id=match.id) }}" id="match-vote-form" data-match-form data-has-votes="{{ 'true' if has_votes else 'false' }}">
+    {% if active_boosts %}
+    <div class="card card-pad mb-2">
+        <div class="section-header">
+            <div class="section-title">Boost Inventory</div>
+            <span class="tag">Pick one per poll</span>
+        </div>
+        <div class="text-sm text-dim mb-1">Choose a boost on the poll you want it applied to. Active boosts stay available until used or expired.</div>
+        <div class="boost-inventory-list">
+            {% for boost in active_boosts %}
+            <div class="boost-inventory-item">
+                <span>{{ boost.boost_type.replace('_', ' ')|title }}</span>
+                <span class="text-xs text-dim">Expires {{ boost.expires_at.strftime('%d %b %I:%M %p') if boost.expires_at else 'soon' }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div id="polls" data-match-id="{{ match.id }}">
+        {% for poll in polls %}
+        {% set voted = user_votes.get(poll.id) %}
+        {% set applied_boost = vote_boosts.get(voted.id) if voted else None %}
+        {% set voted_option = voted.option if voted else '' %}
+        {% set lock_ts = match.start_time_ist_timestamp - 1800 if poll.is_toss_poll else match.start_time_ist_timestamp %}
+        <div class="poll-card{% if poll.is_locked %} locked{% endif %}" data-poll-id="{{ poll.id }}" data-original-option="{{ voted_option }}" data-original-confidence="{{ voted.confidence if voted else 1 }}" data-lock-ts="{{ lock_ts }}" data-locked="{{ 'true' if poll.is_locked else 'false' }}" data-poll-card{% if current_user.is_admin or match.has_started or poll.is_locked %} data-submitted="true"{% endif %}>
+            <div class="poll-q">{{ poll.question }}</div>
+            {% if voted and vote_boosts.get(voted.id) %}
+            <div style="
+                font-size: 0.9rem;
+                color: #c8f53a;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+            ">
+                ✓ Boost Applied: {{ vote_boosts.get(voted.id).boost_type.replace('_', ' ')|title }}
+            </div>
+            {% endif %}
+            <div class="poll-lock" data-lock-label>🔒 Locks in --:--:--</div>
+            {% if not (current_user.is_admin or match.has_started or poll.is_locked) %}
+            <div class="confidence-block" data-confidence>
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-options" data-confidence-options>
+                    <button type="button" class="confidence-btn{% if not voted %} active{% endif %}" data-confidence-value="1">1×</button>
+                    <button type="button" class="confidence-btn" data-confidence-value="2">2×</button>
+                    <button type="button" class="confidence-btn" data-confidence-value="3">3×</button>
+                </div>
+                <div class="confidence-warning" data-confidence-warning></div>
+                {% if voted %}
+                <div class="text-xs text-dim mt-1">Saved at {{ voted.confidence }}× confidence</div>
+                {% endif %}
+            </div>
+            {% elif voted %}
+            <div class="confidence-badge">Voted at {{ voted.confidence }}× confidence</div>
+            {% endif %}
+            <input type="hidden" name="confidence_{{ poll.id }}" value="{{ voted.confidence if voted else 1 }}" data-confidence-input />
+            {% if active_boosts and not (current_user.is_admin or match.has_started or poll.is_locked) %}
+            <div class="boost-select-block mt-2">
+                <div class="confidence-label">Apply boost to this poll</div>
+                <label class="boost-choice boost-choice-none">
+                    <input type="radio" name="boost_{{ poll.id }}" value="" {% if not applied_boost %}checked{% endif %}>
+                    <span>No boost</span>
+                </label>
+                {% for boost in active_boosts %}
+                <label class="boost-choice{% if applied_boost and applied_boost.id == boost.id %} boost-choice-selected{% endif %}">
+                    <input type="radio" name="boost_{{ poll.id }}" value="{{ boost.id }}" {% if applied_boost and applied_boost.id == boost.id %}checked{% endif %}>
+                    <span>{{ boost.boost_type.replace('_', ' ')|title }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="poll-opts">
+                {% for option in poll.options %}
+                {% set is_selected = voted and voted.option == option %}
+                <div class="poll-opt {% if is_selected %}selected{% endif %}" data-option="{{ option }}">
+                    <input type="radio" name="poll_{{ poll.id }}" value="{{ option }}" {% if is_selected %}checked{% endif %} {% if current_user.is_admin or match.has_started or poll.is_locked %}disabled{% endif %} style="display:none" />
+                    <div class="poll-bar" style="width:0%"></div>
+                    <div class="poll-opt-inner">
+                        <span>{{ option }}</span>
+                        <span class="poll-pct percent-label">0%</span>
+                    </div>
+                    <div class="text-xs text-dim mt-1 vote-count">0 votes</div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="poll-closed-banner" data-locked-banner>🔒 Poll closed</div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No polls for this match yet.</div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-2" data-vote-bar>
+        <button type="submit" class="btn btn-acid" data-vote-bar-submit {% if current_user.is_admin or match.has_started %}disabled{% endif %}>
+            {% if has_votes %}Update Picks{% else %}Submit Picks{% endif %}
+        </button>
+    </div>
+</form>
+{% endblock %}
+

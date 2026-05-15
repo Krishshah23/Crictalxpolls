@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="tag mb-3">Results Desk</div>
+
+<div class="card card-pad mb-3">
+    <div class="form-group">
+        <select class="form-input" data-results-filter>
+            <option value="all">All statuses</option>
+            <option value="live">Live</option>
+            <option value="completed">Completed</option>
+            <option value="upcoming">Upcoming</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-input" placeholder="Search match..." data-results-search />
+    </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:0.75rem">
+    {% for match in matches %}
+    <details class="match-expand" data-results-group data-match-status="{{ match.status }}" data-match-name="{{ match.display_name | lower }}" {% if loop.first %}open{% endif %}>
+        <summary class="match-expand-header">
+            <div>
+                <div class="text-xs text-dim mb-1">{{ match.start_time_ist.strftime('%d %b %Y %H:%M') }} IST</div>
+                <div class="fw-bold">{{ match.display_name }}</div>
+            </div>
+            <span class="expand-icon">+</span>
+        </summary>
+        <div class="match-expand-body">
+            <form method="POST" action="{{ url_for('admin.save_results') }}" style="display:flex;flex-direction:column;gap:0.75rem">
+                <input type="hidden" name="match_id" value="{{ match.id }}" />
+                <div class="flex items-center justify-between">
+                    <div class="text-xs text-dim">Update multiple questions, then save all.</div>
+                    <button class="btn btn-acid btn-sm" type="submit" name="save_all" value="1">Save All</button>
+                </div>
+                {% for poll in match.polls %}
+                <div class="card card-pad">
+                    <div class="fw-bold mb-1">{{ poll.question }}</div>
+                    <div class="text-xs text-dim mb-1">{{ 'Locked' if poll.is_locked else 'Open' }}</div>
+                    <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+                        <select name="correct_option_{{ poll.id }}" class="form-input">
+                            <option value="">Select correct option</option>
+                            {% for option in poll.options %}
+                            <option value="{{ option }}" {% if results_map.get(poll.id) == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-ghost btn-sm" type="submit" name="save_single" value="{{ poll.id }}">Save</button>
+                        {% if not poll.is_locked %}
+                        <button class="btn btn-fire btn-sm" type="submit" formaction="{{ url_for('admin.lock_poll', poll_id=poll.id) }}" formmethod="POST">Force Lock</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+    </details>
+    {% endfor %}
+</div>
+{% endblock %}
+

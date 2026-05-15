@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section-header">
+    <div class="section-title">My Votes</div>
+    <span class="tag">Your predictions across the season</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:0.75rem">
+    {% for vote in votes %}
+    <div class="match-card">
+        <div class="tag">{{ vote.poll.match.display_name }}</div>
+        <div class="match-teams mt-1">{{ vote.poll.question }}</div>
+        <div class="text-acid text-sm">{{ vote.option }}</div>
+        <div class="match-actions">
+            <span class="rank-pts">{{ vote.points }} pts</span>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-dim text-sm">No votes yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}
+

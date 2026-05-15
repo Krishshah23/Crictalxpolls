@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crictalx Polls</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/newdesign.css') }}" />
+</head>
+<body>
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-box">
+            <button class="modal-close" type="button" id="user-modal-close">✕</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+    <nav>
+        <div class="nav-logo" onclick="window.location='{{ url_for('main.dashboard') }}'">CRICTALX<span> POLLS</span></div>
+        <div class="nav-links">
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="admin-nav-link {% if request.endpoint == 'admin.admin_dashboard' %}active{% endif %}">Admin Overview</a>
+            <a href="{{ url_for('admin.admin_results') }}" class="admin-nav-link {% if request.endpoint == 'admin.admin_results' %}active{% endif %}">Results Desk</a>
+            {% else %}
+            <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{{ url_for('main.teams') }}" class="nav-link {% if request.endpoint in ['main.teams', 'main.team_detail'] %}active{% endif %}">Teams</a>
+            <a href="{{ url_for('main.standings') }}" class="nav-link {% if request.endpoint in ['main.standings', 'main.match_standings'] %}active{% endif %}">Standings</a>
+            <a href="{{ url_for('main.profile') }}" class="nav-link {% if request.endpoint == 'main.profile' %}active{% endif %}">My Profile</a>
+            <a href="{{ url_for('main.rewards_inventory') }}" class="nav-link {% if request.endpoint == 'main.rewards_inventory' %}active{% endif %}">🎁 Rewards</a>
+            {% endif %}
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" type="button" id="theme-toggle">☀</button>
+            <div class="nav-avatar" onclick="window.location='{{ url_for('main.profile') }}'" style="cursor:pointer">
+                <img src="{{ url_for('static', filename='uploads/avatars/' ~ current_user.avatar_path) if current_user.avatar_path else url_for('static', filename='images/avatar-placeholder.svg') }}" alt="avatar" />
+            </div>
+            <span class="nav-username" onclick="window.location='{{ url_for('main.profile') }}'" style="cursor:pointer">{{ current_user.username }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    {% if score_ticker_items %}
+    <div class="score-ticker">
+        <div class="score-ticker-inner">
+            {% for item in score_ticker_items %}
+            <div class="score-item"><span class="dot"></span>{{ item }}</div>
+            {% endfor %}
+            {% for item in score_ticker_items %}
+            <div class="score-item"><span class="dot"></span>{{ item }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="toast {{ category }} show" data-toast>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Crictalx</h4>
+                <p>Where Cricket Meets Prediction</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('main.faq') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Crictalx. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

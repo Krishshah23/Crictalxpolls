@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="team-hero">
+    <div>
+        <div class="tag">Team Hub</div>
+        <div class="team-title">{{ team_name }}</div>
+        <div class="text-dim text-sm">Squad overview + pick performance</div>
+    </div>
+    <a href="{{ url_for('main.teams') }}" class="btn btn-ghost btn-sm">All teams</a>
+</div>
+
+<div class="team-grid">
+    <div class="card card-pad">
+        <div class="section-header">
+            <div class="section-title">Top Picks</div>
+            <span class="tag">Fan favorites</span>
+        </div>
+        {% if top_picks %}
+        <div class="team-stat-list">
+            {% for player in top_picks %}
+            <div class="team-stat-row">
+                <div>
+                    <div class="fw-bold">{{ player.name }}</div>
+                    <div class="text-xs text-dim">{{ player.role or 'Player' }}</div>
+                </div>
+                <div class="team-stat-value text-acid">{{ player.picks }} picks</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No pick data yet.</div>
+        {% endif %}
+    </div>
+
+    <div class="card card-pad">
+        <div class="section-header">
+            <div class="section-title">Accuracy Leaders</div>
+            <span class="tag">Min 3 picks</span>
+        </div>
+        {% if top_accuracy %}
+        <div class="team-stat-list">
+            {% for player in top_accuracy %}
+            <div class="team-stat-row">
+                <div>
+                    <div class="fw-bold">{{ player.name }}</div>
+                    <div class="text-xs text-dim">{{ player.role or 'Player' }}</div>
+                </div>
+                <div class="team-stat-value">{{ player.accuracy }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No accuracy data yet.</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="team-grid">
+    <div class="card card-pad">
+        <div class="section-header">
+            <div class="section-title">Upcoming Matches</div>
+            <span class="tag">Next fixtures</span>
+        </div>
+        {% for match in upcoming_matches %}
+        <div class="match-card match-card-compact" onclick="window.location='{{ url_for('main.match_detail', match_id=match.id) }}'">
+            <div class="tag">{{ match.start_time_ist.strftime('%d %b %Y · %I:%M %p IST') }}</div>
+            <div class="match-teams mt-1">{{ match.display_name }}</div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No upcoming fixtures.</div>
+        {% endfor %}
+    </div>
+
+    <div class="card card-pad">
+        <div class="section-header">
+            <div class="section-title">Recent Results</div>
+            <span class="tag">Last 4 matches</span>
+        </div>
+        {% for match in recent_matches %}
+        <div class="match-card match-card-compact" onclick="window.location='{{ url_for('main.match_detail', match_id=match.id) }}'">
+            <div class="tag">{{ match.start_time_ist.strftime('%d %b %Y · %I:%M %p IST') }}</div>
+            <div class="match-teams mt-1">{{ match.display_name }}</div>
+            <div class="text-dim text-sm">Completed</div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No completed matches yet.</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card card-pad">
+    <div class="section-header">
+        <div class="section-title">Squad</div>
+        <span class="tag">Roster</span>
+    </div>
+    {% if roster %}
+    <div class="roster-grid">
+        {% for role, players in roster_by_role.items() %}
+        {% if players %}
+        <div class="roster-column">
+            <div class="roster-role">{{ role }}</div>
+            <div class="roster-list">
+                {% for player in players %}
+                <div class="roster-row">
+                    <div class="roster-name">{{ player.name }}</div>
+                    <div class="roster-meta">
+                        <span>{{ player_stats | selectattr('name', 'equalto', player.name) | map(attribute='picks') | first or 0 }} picks</span>
+                        <span>•</span>
+                        <span>{{ player_stats | selectattr('name', 'equalto', player.name) | map(attribute='accuracy') | first or 0 }}%</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-dim text-sm">No players added for this team yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

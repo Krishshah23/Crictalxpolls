@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-page animate-in">
+    <section class="dashboard-hero card card-pad animate-in delay-1">
+        <div class="dashboard-hero-copy">
+            <div class="tag">Matchday control center</div>
+            <h1 class="dashboard-title">Welcome back, {{ current_user.username }}</h1>
+            <p class="dashboard-lead">
+                Everything that matters today lives here: your next match, your streak, your boost, and the people you need to beat.
+            </p>
+            <div class="dashboard-hero-actions">
+                {% if next_match %}
+                <a href="{{ url_for('main.match_detail', match_id=next_match.id) }}" class="btn btn-acid">Play next match</a>
+                {% endif %}
+                <a href="{{ url_for('main.rewards_inventory') }}" class="btn btn-ghost">🎁 Rewards</a>
+                <a href="{{ url_for('main.profile') }}" class="btn btn-ghost">Open profile</a>
+                <a href="{{ url_for('main.standings') }}" class="btn btn-ghost">Standings</a>
+            </div>
+            <div class="dashboard-hero-chips">
+                <span class="confidence-chip">Current streak: {{ current_streak }}</span>
+                <span class="confidence-chip">Accuracy: {{ accuracy }}%</span>
+                <span class="confidence-chip">Avg confidence: {{ avg_confidence }}×</span>
+                <span class="confidence-chip">High-risk picks: {{ high_confidence_picks }}</span>
+            </div>
+        </div>
+
+        <div class="dashboard-hero-panel">
+            <div class="dashboard-pulse card-surface">
+                <div class="section-header">
+                    <div class="section-title">Season pulse</div>
+                    <span class="tag">Fast read</span>
+                </div>
+                <div class="dashboard-pulse-grid">
+                    <div class="dashboard-pulse-stat">
+                        <div class="dashboard-pulse-label">Points</div>
+                        <div class="dashboard-pulse-value text-acid">{{ total_points }}</div>
+                    </div>
+                    <div class="dashboard-pulse-stat">
+                        <div class="dashboard-pulse-label">Votes</div>
+                        <div class="dashboard-pulse-value">{{ total_votes }}</div>
+                    </div>
+                    <div class="dashboard-pulse-stat">
+                        <div class="dashboard-pulse-label">Matches</div>
+                        <div class="dashboard-pulse-value">{{ matches_played }}</div>
+                    </div>
+                    <div class="dashboard-pulse-stat">
+                        <div class="dashboard-pulse-label">Best streak</div>
+                        <div class="dashboard-pulse-value">{{ best_streak }}</div>
+                    </div>
+                </div>
+                {% if next_match %}
+                <div class="dashboard-next-match" data-countdown="{{ next_match_ts or '' }}">
+                    <div class="dashboard-next-match-label">Next match</div>
+                    <div class="dashboard-next-match-value countdown" data-countdown-label>--:--:--</div>
+                    <div class="dashboard-next-match-sub">{{ next_match.display_name }}</div>
+                </div>
+                {% else %}
+                <div class="dashboard-next-match empty-state">
+                    <div class="dashboard-next-match-label">Next match</div>
+                    <div class="dashboard-next-match-value">--</div>
+                    <div class="dashboard-next-match-sub">No upcoming match loaded yet</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="weekly-spotlight card card-pad animate-in delay-2">
+        <div class="weekly-spotlight-copy">
+            <div class="tag">Weekly MVP</div>
+            <h2 class="weekly-spotlight-title">
+                {% if weekly_top %}
+                {{ weekly_top.user.username }} is leading the week
+                {% else %}
+                No MVP yet, but this spot is reserved
+                {% endif %}
+            </h2>
+            <p class="weekly-spotlight-text">
+                {% if weekly_top %}
+                {{ weekly_top.points }} points this week with the highest rolling score in the last 7 days.
+                {% else %}
+                This is the highest-priority performance block on the dashboard. It will surface your weekly leader here.
+                {% endif %}
+            </p>
+        </div>
+        <div class="weekly-spotlight-panel">
+            <span class="badge badge-mvp">7-day form</span>
+            {% if weekly_top %}
+            <div class="weekly-spotlight-value">{{ weekly_top.points }}</div>
+            <div class="weekly-spotlight-sub">points this week</div>
+            {% else %}
+            <div class="weekly-spotlight-value">--</div>
+            <div class="weekly-spotlight-sub">waiting for the first leader</div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="dashboard-layout animate-in delay-2">
+        <div class="dashboard-main">
+            <div class="card card-pad featured-match-card">
+                <div class="section-header">
+                    <div class="section-title">Featured Match</div>
+                    {% if spotlight_match and spotlight_match.status == 'live' %}
+                    <span class="badge badge-live"><span class="live-dot"></span>Live now</span>
+                    {% elif spotlight_match %}
+                    <span class="badge badge-ice">Up next</span>
+                    {% else %}
+                    <span class="badge badge-ice">No spotlight</span>
+                    {% endif %}
+                </div>
+
+                {% if spotlight_match %}
+                <div class="featured-match-body" onclick="window.location='{{ url_for('main.match_detail', match_id=spotlight_match.id) }}'">
+                    <div class="tag">{{ spotlight_match.start_time_ist.strftime('%d %b %Y · %I:%M %p IST') }}</div>
+                    <div class="featured-match-title">{{ spotlight_match.display_name }}</div>
+                    <div class="featured-match-copy">
+                        {% if spotlight_match.status == 'live' %}
+                        Polls are open and the match is moving. Pick fast, keep the streak alive.
+                        {% else %}
+                        This is your next shot. Lock in before the toss and keep your season moving.
+                        {% endif %}
+                    </div>
+                    <div class="match-actions">
+                        <a class="btn btn-acid btn-sm" href="{{ url_for('main.match_detail', match_id=spotlight_match.id) }}">Go to Polls →</a>
+                        <a class="btn btn-ghost btn-sm" href="{{ url_for('main.standings') }}">Standings</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="empty-state compact">
+                    <div class="featured-match-title">No featured match yet</div>
+                    <div class="featured-match-copy">Check back when the next fixture is loaded.</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card card-pad upcoming-card">
+                <div class="section-header">
+                    <div class="section-title">Upcoming Matches</div>
+                    <span class="tag">Pick before the toss</span>
+                </div>
+                <div class="upcoming-list">
+                    {% for match in matches[:5] %}
+                    <div class="upcoming-row" onclick="window.location='{{ url_for('main.match_detail', match_id=match.id) }}'">
+                        <div>
+                            <div class="tag">{{ match.start_time_ist.strftime('%d %b · %I:%M %p IST') }}</div>
+                            <div class="upcoming-title">{{ match.display_name }}</div>
+                        </div>
+                        <div class="upcoming-status">
+                            {% if match.status == 'live' %}
+                            <span class="badge badge-live"><span class="live-dot"></span>Live</span>
+                            {% elif match.status == 'completed' %}
+                            <span class="badge badge-ice">Completed</span>
+                            {% else %}
+                            <span class="badge badge-acid">Upcoming</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-dim text-sm">No matches loaded yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-side">
+            <div class="card card-pad roulette-card">
+                <div class="section-header">
+                    <div class="section-title">Pick Boost Roulette</div>
+                    <span class="tag">Daily spin</span>
+                </div>
+                <div class="roulette-scene {% if can_spin %}ready{% elif active_boosts %}active{% else %}locked{% endif %}">
+                    <div class="roulette-wheel-stage" data-roulette-wheel-stage data-roulette-options='{{ roulette_options|tojson }}'>
+                        <div class="roulette-pointer"></div>
+                        <div class="roulette-wheel" data-roulette-wheel></div>
+                    </div>
+                    <div class="roulette-legend">
+                        {% for option in roulette_options %}
+                        <span class="roulette-legend-chip tone-{{ option.tone }}">{{ option.label }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="roulette-copy">
+                        {% if can_spin %}
+                        <div class="roulette-features-grid">
+                            <div class="feature-chip">2–5× Multipliers</div>
+                            <div class="feature-chip">Wildfire Chaos</div>
+                            <div class="feature-chip">Double or Nothing</div>
+                            <div class="feature-chip">Break Even Shield</div>
+                            <div class="feature-chip">Win/Loss Reverse</div>
+                            <div class="feature-chip">Free Spin Cooldown</div>
+                        </div>
+                        Spin the wheel and unlock a stronger next-correct-pick boost.
+                        {% elif active_boosts %}
+                        You have active boosts ready to apply. Choose one on a match poll before it expires.
+                        {% else %}
+                        You already spun in the last 24 hours. Come back when the reset timer ends.
+                        {% endif %}
+                    </div>
+                    {% if active_boosts %}
+                    <div class="roulette-status">
+                        <span class="roulette-chip">{{ active_boosts|length }} active boost{{ '' if active_boosts|length == 1 else 's' }}</span>
+                    </div>
+                    <div class="boost-inventory-list mt-1">
+                        {% for boost in active_boosts %}
+                        <div class="boost-inventory-item">
+                            <span>{{ boost.boost_type.replace('_', ' ')|title }}</span>
+                            <span class="text-xs text-dim">Use it on a poll</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% elif not can_spin %}
+                    <div class="roulette-status" data-countdown="{{ spin_reset_ts or '' }}">
+                        <span class="roulette-chip">Locked for today</span>
+                        <span class="roulette-countdown countdown" data-countdown-label>{{ spin_reset_label or '--:--' }}</span>
+                    </div>
+                    {% endif %}
+                    {% if can_spin %}
+                    <form method="POST" action="{{ url_for('main.roulette_spin') }}" class="roulette-form" data-roulette-form>
+                        <button class="btn btn-acid roulette-spin-btn" type="submit" data-roulette-spin>Spin the wheel</button>
+                    </form>
+                    {% else %}
+                    <div class="roulette-lock-note">Next spin unlocks on {{ spin_reset_label or 'the reset date' }}.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+        const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+        return {
+            x: centerX + radius * Math.cos(angleInRadians),
+            y: centerY + radius * Math.sin(angleInRadians),
+        };
+    }
+
+    function describeArc(centerX, centerY, radius, startAngle, endAngle) {
+        const start = polarToCartesian(centerX, centerY, radius, endAngle);
+        const end = polarToCartesian(centerX, centerY, radius, startAngle);
+        const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+        return ['M', centerX, centerY, 'L', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y, 'Z'].join(' ');
+    }
+
+    document.querySelectorAll('[data-roulette-wheel-stage]').forEach((stage) => {
+        const wheel = stage.querySelector('[data-roulette-wheel]');
+        if (!wheel) {
+            return;
+        }
+
+        let options = [];
+        try {
+            options = JSON.parse(stage.dataset.rouletteOptions || '[]');
+        } catch (error) {
+            options = [];
+        }
+
+        if (!options.length) {
+            return;
+        }
+
+        const size = 280;
+        const center = size / 2;
+        const radius = 126;
+        const segmentAngle = 360 / options.length;
+        const labelRadius = 78;
+
+        const slices = options.map((option, index) => {
+            const startAngle = -90 + (index * segmentAngle);
+            const endAngle = startAngle + segmentAngle;
+            const midAngle = startAngle + (segmentAngle / 2);
+            const position = polarToCartesian(center, center, labelRadius, midAngle);
+            const labelAngle = midAngle + 90;
+            return `
+                <path class="roulette-slice tone-${option.tone || 'acid'}" d="${describeArc(center, center, radius, startAngle, endAngle)}"></path>
+                <g class="roulette-label-group" transform="translate(${position.x} ${position.y}) rotate(${labelAngle})">
+                    <text class="roulette-label" text-anchor="middle" dominant-baseline="middle">${escapeHtml(option.label)}</text>
+                </g>
+            `;
+        }).join('');
+
+        wheel.innerHTML = `
+            <svg class="roulette-wheel-svg" viewBox="0 0 ${size} ${size}" role="img" aria-label="Roulette wheel">
+                ${slices}
+                <circle class="roulette-wheel-core-ring" cx="${center}" cy="${center}" r="48"></circle>
+                <text class="roulette-wheel-core-text" x="${center}" y="${center - 2}" text-anchor="middle">SPIN</text>
+                <text class="roulette-wheel-core-subtext" x="${center}" y="${center + 14}" text-anchor="middle">BOOST</text>
+            </svg>
+        `;
+    });
+
+    document.querySelectorAll('[data-roulette-form]').forEach((form) => {
+        const button = form.querySelector('[data-roulette-spin]');
+        const scene = form.closest('.roulette-scene');
+        const wheel = scene ? scene.querySelector('[data-roulette-wheel]') : null;
+        if (!button || !wheel) {
+            return;
+        }
+
+        button.addEventListener('click', (event) => {
+            if (form.dataset.armed === 'true') {
+                return;
+            }
+            event.preventDefault();
+            form.dataset.armed = 'true';
+            const turns = 5 + Math.floor(Math.random() * 3);
+            const offset = Math.floor(Math.random() * 360);
+            wheel.style.setProperty('--spin-angle', `${turns * 360 + offset}deg`);
+            wheel.classList.add('spinning');
+            button.textContent = 'Spinning...';
+            setTimeout(() => form.submit(), 1150);
+        });
+    });
+</script>
+{% endblock %}

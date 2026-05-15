@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-grid animate-in">
+    <aside class="profile-sidebar">
+        <div class="card card-pad profile-card">
+            <div class="profile-identity">
+                <img src="{{ url_for('static', filename='uploads/avatars/' ~ current_user.avatar_path) if current_user.avatar_path else url_for('static', filename='images/avatar-placeholder.svg') }}" class="profile-avatar" alt="{{ current_user.username }}" />
+                <div>
+                    <div class="profile-name">{{ current_user.username }}</div>
+                    <div class="profile-handle">@{{ current_user.username }}</div>
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data" class="profile-edit">
+                <div class="form-group">
+                    <label class="form-label">Display Name</label>
+                    <input name="username" value="{{ current_user.username }}" class="form-input" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Avatar</label>
+                    <input name="avatar" type="file" accept="image/png,image/jpeg,image/webp" class="form-input" />
+                </div>
+                <button class="btn btn-acid btn-sm profile-save" type="submit">Save Changes</button>
+                <a href="{{ url_for('main.rewards_inventory') }}" class="btn btn-ghost btn-sm" style="width: 100%; margin-top: 0.5rem;">🎁 View Rewards</a>
+            </form>
+        </div>
+
+        <div class="card card-pad profile-card">
+            <div class="profile-stats-grid">
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Matches</div>
+                    <div class="profile-stat-value">{{ matches_played }}</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Avg Pts</div>
+                    <div class="profile-stat-value stat-accent">{{ avg_points }}</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Hit Rate</div>
+                    <div class="profile-stat-value">{{ hit_rate }}%</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Current Streak</div>
+                    <div class="profile-stat-value text-acid">{{ current_streak }}</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Best Streak</div>
+                    <div class="profile-stat-value">{{ best_streak }}</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-label">Rival Gap</div>
+                    <div class="profile-stat-value {% if total_points - rival_points < 0 %}stat-negative{% endif %}">
+                        {{ total_points - rival_points }}
+                    </div>
+                </div>
+            </div>
+            <div class="profile-trophies">
+                {% for trophy in trophies %}
+                <span class="trophy-pill">{{ trophy }}</span>
+                {% endfor %}
+            </div>
+            <div class="profile-fun-badges">
+                <div class="profile-badge-heading">Badge Lab</div>
+                <div class="profile-fun-badge-row">
+                    {% for badge in fun_badges %}
+                    <button class="fun-badge" type="button" data-fun-badge title="{{ badge.hint }}">{{ badge.label }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <section class="profile-main">
+        <div class="card card-pad" style="display:flex;flex-direction:column;min-height:320px">
+            <div class="section-header mb-1">
+                <div class="tag">Points Performance</div>
+                <div class="snapshot-actions">
+                    <a href="{{ url_for('main.export_profile') }}" class="btn btn-ghost btn-sm">Export CSV</a>
+                </div>
+            </div>
+            <div style="flex:1;position:relative;width:100%">
+                <div style="position:absolute;top:0;left:0;right:0;bottom:0;">
+                    <canvas id="pointsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-pad profile-analytics-card">
+            <div class="section-header">
+                <div class="section-title">Analytics</div>
+                <span class="tag">Overview, confidence, split</span>
+            </div>
+            <div class="tabs profile-analytics-tabs" data-analytics-tabs>
+                <button class="tab active" type="button" data-analytics-tab="overview">Overview</button>
+                <button class="tab" type="button" data-analytics-tab="confidence">Confidence</button>
+                <button class="tab" type="button" data-analytics-tab="insights">Insights</button>
+            </div>
+
+            <div class="profile-analytics-panel" data-analytics-panel="overview">
+                <div class="mini-stats-grid">
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Accuracy</div>
+                        <div class="mini-stat-value">{{ accuracy }}%</div>
+                        <div class="mini-stat-sub">Resolved picks</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Correct</div>
+                        <div class="mini-stat-value text-acid">{{ correct_votes }}</div>
+                        <div class="mini-stat-sub">Right calls</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Incorrect</div>
+                        <div class="mini-stat-value text-fire">{{ incorrect_votes }}</div>
+                        <div class="mini-stat-sub">Missed picks</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Pending</div>
+                        <div class="mini-stat-value">{{ pending_votes }}</div>
+                        <div class="mini-stat-sub">Awaiting results</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Avg Confidence</div>
+                        <div class="mini-stat-value">{{ avg_confidence }}×</div>
+                        <div class="mini-stat-sub">Season average</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">High-Risk</div>
+                        <div class="mini-stat-value">{{ confidence_counts[3] }}</div>
+                        <div class="mini-stat-sub">3× picks</div>
+                    </div>
+                </div>
+                <div class="confidence-breakdown">
+                    <span class="confidence-chip">1×: {{ confidence_counts[1] }}</span>
+                    <span class="confidence-chip">2×: {{ confidence_counts[2] }}</span>
+                    <span class="confidence-chip">3×: {{ confidence_counts[3] }}</span>
+                </div>
+            </div>
+
+            <div class="profile-analytics-panel" data-analytics-panel="confidence" hidden>
+                <div class="confidence-grid">
+                    {% for row in confidence_stats %}
+                    <div class="confidence-panel">
+                        <div class="confidence-level">{{ row.level }}×</div>
+                        <div class="confidence-metric">
+                            <span>Accuracy</span>
+                            <span class="confidence-value">{{ row.accuracy }}%</span>
+                        </div>
+                        <div class="confidence-metric">
+                            <span>Correct</span>
+                            <span>{{ row.correct }} / {{ row.picks }}</span>
+                        </div>
+                        <div class="confidence-metric">
+                            <span>Avg Points</span>
+                            <span>{{ row.avg_points }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="profile-analytics-panel" data-analytics-panel="insights" hidden>
+                <div class="profile-insights-grid">
+                    <div class="profile-insight-card accent-acid">
+                        <div class="profile-split-label">Win rate</div>
+                        <div class="profile-split-value text-acid">{{ win_rate }}%</div>
+                        <div class="profile-insight-sub">{{ win_matches }} wins • {{ loss_matches }} losses</div>
+                    </div>
+                    <div class="profile-insight-card">
+                        <div class="profile-split-label">Momentum</div>
+                        <div class="profile-split-value {% if momentum >= 0 %}text-acid{% else %}text-fire{% endif %}">{{ momentum }}</div>
+                        <div class="profile-insight-sub">Last 3 vs previous 3 matches</div>
+                    </div>
+                    <div class="profile-insight-card">
+                        <div class="profile-split-label">Best match</div>
+                        <div class="profile-insight-note">{% if best_match %}{{ best_match.label }}{% else %}-{% endif %}</div>
+                        <div class="profile-insight-sub">{% if best_match %}{{ best_match.points }} pts{% endif %}</div>
+                    </div>
+                    <div class="profile-insight-card">
+                        <div class="profile-split-label">Worst match</div>
+                        <div class="profile-insight-note">{% if worst_match %}{{ worst_match.label }}{% else %}-{% endif %}</div>
+                        <div class="profile-insight-sub">{% if worst_match %}{{ worst_match.points }} pts{% endif %}</div>
+                    </div>
+                    <div class="profile-insight-card">
+                        <div class="profile-split-label">Sharpest level</div>
+                        <div class="profile-split-value">{% if best_confidence %}{{ best_confidence.level }}×{% else %}-{% endif %}</div>
+                        <div class="profile-insight-sub">{% if best_confidence %}{{ best_confidence.accuracy }}% accuracy{% endif %}</div>
+                    </div>
+                    <div class="profile-insight-card">
+                        <div class="profile-split-label">Current streak</div>
+                        <div class="profile-split-value text-acid">{{ current_streak }}</div>
+                        <div class="profile-insight-sub">Best streak {{ best_streak }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-pad profile-activity-card">
+            <div class="section-header">
+                <div class="section-title">Activity</div>
+                <div class="snapshot-actions">
+                    <a href="{{ url_for('main.profile_history') }}" class="btn btn-ghost btn-sm">View all history</a>
+                </div>
+            </div>
+            <div class="tabs profile-tabs" data-profile-tabs>
+                <button class="tab active" type="button" data-profile-tab="history">Match History</button>
+                <button class="tab" type="button" data-profile-tab="results">Results</button>
+                <button class="tab" type="button" data-profile-tab="votes">My Votes</button>
+            </div>
+
+            <div class="profile-activity-panel" data-profile-panel="history">
+                <div class="match-history-list">
+                    {% for entry in history[-4:] %}
+                    <div class="match-history-row">
+                        <div class="match-history-index">{{ loop.revindex }}</div>
+                        <div class="match-history-name">
+                            {{ entry.label }}
+                            {% if entry.winner %}
+                            <span class="win-mark">WIN</span>
+                            {% endif %}
+                        </div>
+                        <div class="match-history-points">{{ entry.points }} pts</div>
+                    </div>
+                    {% else %}
+                    <div class="text-dim text-sm">No matches yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="profile-activity-panel" data-profile-panel="results" hidden>
+                <div class="section-header" style="margin-bottom: 0.75rem;">
+                    <span class="tag">Latest results</span>
+                    <a href="{{ url_for('main.results') }}" class="btn btn-ghost btn-sm">View all results</a>
+                </div>
+                <div class="profile-compact-list">
+                    {% for match in recent_results[:4] %}
+                    <div class="match-card match-card-compact">
+                        <div class="match-teams">{{ match.display_name }}</div>
+                        <div class="match-meta">Completed</div>
+                    </div>
+                    {% else %}
+                    <div class="text-dim text-sm">No results yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="profile-activity-panel" data-profile-panel="votes" hidden>
+                <div class="section-header" style="margin-bottom: 0.75rem;">
+                    <span class="tag">Latest votes</span>
+                    <a href="{{ url_for('main.my_votes') }}" class="btn btn-ghost btn-sm">View all votes</a>
+                </div>
+                <div class="profile-compact-list">
+                    {% for vote in recent_votes[:4] %}
+                    <div class="match-card match-card-compact">
+                        <div class="tag">{{ vote.poll.match.display_name }}</div>
+                        <div class="match-teams mt-1">{{ vote.poll.question }}</div>
+                        <div class="text-acid text-sm">{{ vote.option }}</div>
+                    </div>
+                    {% else %}
+                    <div class="text-dim text-sm">No votes yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ chart_labels|tojson }};
+    const data = {{ chart_points|tojson }};
+    const winFlags = {{ chart_wins|default([])|tojson }};
+
+    const ctx = document.getElementById('pointsChart');
+    if (ctx) {
+        const accent = '#00cfff';
+        const accentBg = 'rgba(0, 207, 255, 0.14)';
+        const abbreviateTeam = (name) => {
+            const parts = name.split(" ").filter(Boolean);
+            if (!parts.length) {
+                return name;
+            }
+            return parts.map((part) => part[0].toUpperCase()).join("");
+        };
+        const abbreviateMatch = (label) => {
+            if (!label) {
+                return "";
+            }
+            const split = label.split(" vs ");
+            if (split.length === 2) {
+                return `${abbreviateTeam(split[0])} vs ${abbreviateTeam(split[1])}`;
+            }
+            return label.length > 12 ? `${label.substring(0, 12)}...` : label;
+        };
+        // ensure we have a 2d context (Chart.js accepts canvas or context)
+        const ctx2d = (ctx.getContext ? ctx.getContext('2d') : ctx);
+        // debug: log data to console when troubleshooting
+        console.log('profile chart data:', { labels, data, winFlags });
+
+        new Chart(ctx2d, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Points',
+                        data,
+                        borderColor: accent,
+                        backgroundColor: accentBg,
+                        tension: 0.35,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: accent,
+                        pointBorderColor: '#06282f',
+                        pointStyle: 'circle',
+                        pointBorderWidth: 1,
+                    },
+                    // gold dots on win points only
+                    {
+                        label: 'Wins',
+                        data,
+                        borderColor: 'transparent',
+                        backgroundColor: 'transparent',
+                        tension: 0,
+                        fill: false,
+                        pointRadius: (data || []).map((_, i) => (winFlags[i] ? 6 : 0)),
+                        pointBackgroundColor: (data || []).map((_, i) => (winFlags[i] ? '#f5c842' : 'rgba(0,0,0,0)')),
+                        pointBorderColor: (data || []).map((_, i) => (winFlags[i] ? 'rgba(245,200,66,0.95)' : 'rgba(0,0,0,0)')),
+                        pointStyle: 'circle',
+                        pointHoverRadius: (data || []).map((_, i) => (winFlags[i] ? 7 : 0)),
+                        pointBorderWidth: (data || []).map((_, i) => (winFlags[i] ? 1 : 0)),
+                        order: 3,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#111',
+                        titleColor: '#fff',
+                        bodyColor: accent,
+                        borderColor: '#222',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false,
+                        filter: (item) => item.datasetIndex === 0
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: {
+                            color: '#888',
+                            maxRotation: 0,
+                            minRotation: 0,
+                            autoSkip: true,
+                            maxTicksLimit: 6,
+                            font: { size: 10 },
+                            callback: function(value, index) {
+                                return abbreviateMatch(labels[index] || '');
+                            }
+                        }
+                    },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' }, beginAtZero: true }
+                }
+            }
+        });
+
+        const tabs = document.querySelectorAll("[data-profile-tab]");
+        const panels = document.querySelectorAll("[data-profile-panel]");
+        const activateTab = (tabName) => {
+            tabs.forEach((tab) => {
+                tab.classList.toggle("active", tab.getAttribute("data-profile-tab") === tabName);
+            });
+            panels.forEach((panel) => {
+                panel.hidden = panel.getAttribute("data-profile-panel") !== tabName;
+            });
+        };
+
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => activateTab(tab.getAttribute("data-profile-tab")));
+        });
+
+        const analyticsTabs = document.querySelectorAll("[data-analytics-tab]");
+        const analyticsPanels = document.querySelectorAll("[data-analytics-panel]");
+        const activateAnalyticsTab = (tabName) => {
+            analyticsTabs.forEach((tab) => {
+                tab.classList.toggle("active", tab.getAttribute("data-analytics-tab") === tabName);
+            });
+            analyticsPanels.forEach((panel) => {
+                panel.hidden = panel.getAttribute("data-analytics-panel") !== tabName;
+            });
+        };
+
+        analyticsTabs.forEach((tab) => {
+            tab.addEventListener("click", () => activateAnalyticsTab(tab.getAttribute("data-analytics-tab")));
+        });
+
+        document.querySelectorAll("[data-fun-badge]").forEach((badge) => {
+            badge.addEventListener("click", () => {
+                const message = badge.getAttribute("title") || badge.textContent || "Badge unlocked.";
+                showToast(message, "success");
+            });
+        });
+    }
+</script>
+{% endblock %}
+

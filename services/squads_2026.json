@@ -1,0 +1,1025 @@
+{
+  "source": "https://www.iplt20.com/teams",
+  "teams": {
+    "Chennai Super Kings": [
+      {
+        "name": "Ruturaj Gaikwad",
+        "role": "Batsman"
+      },
+      {
+        "name": "MS Dhoni",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Sanju Samson",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Dewald Brevis",
+        "role": "Batsman"
+      },
+      {
+        "name": "Ayush Mhatre",
+        "role": "Batsman"
+      },
+      {
+        "name": "Kartik Sharma",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Sarfaraz Khan",
+        "role": "Batsman"
+      },
+      {
+        "name": "Urvil Patel",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Jamie Overton",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ramakrishna Ghosh",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Prashant Veer",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Matthew William Short",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Aman Khan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Zak Foulkes",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Shivam Dube",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Khaleel Ahmed",
+        "role": "Bowler"
+      },
+      {
+        "name": "Noor Ahmad",
+        "role": "Bowler"
+      },
+      {
+        "name": "Anshul Kamboj",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mukesh Choudhary",
+        "role": "Bowler"
+      },
+      {
+        "name": "Shreyas Gopal",
+        "role": "Bowler"
+      },
+      {
+        "name": "Gurjapneet Singh",
+        "role": "Bowler"
+      },
+      {
+        "name": "Akeal Hosein",
+        "role": "Bowler"
+      },
+      {
+        "name": "Matt Henry",
+        "role": "Bowler"
+      },
+      {
+        "name": "Rahul Chahar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Spencer Johnson",
+        "role": "Bowler"
+      }
+    ],
+    "Delhi Capitals": [
+      {
+        "name": "KL Rahul",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Karun Nair",
+        "role": "Batsman"
+      },
+      {
+        "name": "David Miller",
+        "role": "Batsman"
+      },
+      {
+        "name": "Ben Duckett",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Pathum Nissanka",
+        "role": "Batsman"
+      },
+      {
+        "name": "Sahil Parakh",
+        "role": "Batsman"
+      },
+      {
+        "name": "Prithvi Shaw",
+        "role": "Batsman"
+      },
+      {
+        "name": "Abishek Porel",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Tristan Stubbs",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Axar Patel",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Sameer Rizvi",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ashutosh Sharma",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Vipraj Nigam",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ajay Mandal",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Tripurana Vijay",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Madhav Tiwari",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Nitish Rana",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mitchell Starc",
+        "role": "Bowler"
+      },
+      {
+        "name": "T. Natarajan",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mukesh Kumar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Dushmantha Chameera",
+        "role": "Bowler"
+      },
+      {
+        "name": "Auqib Nabi",
+        "role": "Bowler"
+      },
+      {
+        "name": "Lungisani Ngidi",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kyle Jamieson",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kuldeep Yadav",
+        "role": "Bowler"
+      }
+    ],
+    "Gujarat Titans": [
+      {
+        "name": "Shubman Gill",
+        "role": "Batsman"
+      },
+      {
+        "name": "Jos Buttler",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Kumar Kushagra",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Anuj Rawat",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Tom Banton",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Glenn Phillips",
+        "role": "Batsman"
+      },
+      {
+        "name": "Sai Sudharsan",
+        "role": "Batsman"
+      },
+      {
+        "name": "Nishant Sindhu",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Washington Sundar",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mohd. Arshad Khan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Sai Kishore",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Jayant Yadav",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Jason Holder",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Rahul Tewatia",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Shahrukh Khan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Kagiso Rabada",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mohammed Siraj",
+        "role": "Bowler"
+      },
+      {
+        "name": "Prasidh Krishna",
+        "role": "Bowler"
+      },
+      {
+        "name": "Manav Suthar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Gurnoor Singh Brar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Ishant Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Ashok Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Luke Wood",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kulwant Khejroliya",
+        "role": "Bowler"
+      },
+      {
+        "name": "Rashid Khan",
+        "role": "Bowler"
+      }
+    ],
+    "Kolkata Knight Riders": [
+      {
+        "name": "Ajinkya Rahane",
+        "role": "Batsman"
+      },
+      {
+        "name": "Rinku Singh",
+        "role": "Batsman"
+      },
+      {
+        "name": "Angkrish Raghuvanshi",
+        "role": "Batsman"
+      },
+      {
+        "name": "Manish Pandey",
+        "role": "Batsman"
+      },
+      {
+        "name": "Finn Allen",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Tejasvi Singh",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Rahul Tripathi",
+        "role": "Batsman"
+      },
+      {
+        "name": "Tim Seifert",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Rovman Powell",
+        "role": "Batsman"
+      },
+      {
+        "name": "Anukul Roy",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Cameron Green",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Sarthak Ranjan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Daksh Kamra",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Rachin Ravindra",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ramandeep Singh",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Sunil Narine",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Blessing Muzarabani",
+        "role": "Bowler"
+      },
+      {
+        "name": "Vaibhav Arora",
+        "role": "Bowler"
+      },
+      {
+        "name": "Matheesha Pathirana",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kartik Tyagi",
+        "role": "Bowler"
+      },
+      {
+        "name": "Prashant Solanki",
+        "role": "Bowler"
+      },
+      {
+        "name": "Saurabh Dubey",
+        "role": "Bowler"
+      },
+      {
+        "name": "Navdeep Saini",
+        "role": "Bowler"
+      },
+      {
+        "name": "Umran Malik",
+        "role": "Bowler"
+      },
+      {
+        "name": "Varun Chakaravarthy",
+        "role": "Bowler"
+      }
+    ],
+    "Lucknow Super Giants": [
+      {
+        "name": "Rishabh Pant",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Aiden Markram",
+        "role": "Batsman"
+      },
+      {
+        "name": "Himmat Singh",
+        "role": "Batsman"
+      },
+      {
+        "name": "Matthew Breetzke",
+        "role": "Batsman"
+      },
+      {
+        "name": "Mukul Choudhary",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Akshat Raghuwanshi",
+        "role": "Batsman"
+      },
+      {
+        "name": "Josh Inglis",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Nicholas Pooran",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Mitchell Marsh",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Abdul Samad",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Shahbaz Ahamad",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Arshin Kulkarni",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Wanindu Hasaranga",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ayush Badoni",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mohammad Shami",
+        "role": "Bowler"
+      },
+      {
+        "name": "Avesh Khan",
+        "role": "Bowler"
+      },
+      {
+        "name": "M. Siddharth",
+        "role": "Bowler"
+      },
+      {
+        "name": "Digvesh Singh",
+        "role": "Bowler"
+      },
+      {
+        "name": "Akash Singh",
+        "role": "Bowler"
+      },
+      {
+        "name": "Prince Yadav",
+        "role": "Bowler"
+      },
+      {
+        "name": "Arjun Tendulkar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Anrich Nortje",
+        "role": "Bowler"
+      },
+      {
+        "name": "Naman Tiwari",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mayank Yadav",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mohsin Khan",
+        "role": "Bowler"
+      }
+    ],
+    "Mumbai Indians": [
+      {
+        "name": "Rohit Sharma",
+        "role": "Batsman"
+      },
+      {
+        "name": "Surya Kumar Yadav",
+        "role": "Batsman"
+      },
+      {
+        "name": "Robin Minz",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Sherfane Rutherford",
+        "role": "Batsman"
+      },
+      {
+        "name": "Ryan Rickelton",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Quinton de Kock",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Danish Malewar",
+        "role": "Batsman"
+      },
+      {
+        "name": "N. Tilak Varma",
+        "role": "Batsman"
+      },
+      {
+        "name": "Hardik Pandya",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Naman Dhir",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mitchell Santner",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Raj Angad Bawa",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Atharva Ankolekar",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mayank Rawat",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Corbin Bosch",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Will Jacks",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Shardul Thakur",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Trent Boult",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mayank Markande",
+        "role": "Bowler"
+      },
+      {
+        "name": "Deepak Chahar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Ashwani Kumar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Raghu Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Mohammad Izhar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Allah Ghazanfar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Jasprit Bumrah",
+        "role": "Bowler"
+      }
+    ],
+    "Punjab Kings": [
+      {
+        "name": "Shreyas Iyer",
+        "role": "Batsman"
+      },
+      {
+        "name": "Nehal Wadhera",
+        "role": "Batsman"
+      },
+      {
+        "name": "Vishnu Vinod",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Harnoor Pannu",
+        "role": "Batsman"
+      },
+      {
+        "name": "Pyla Avinash",
+        "role": "Batsman"
+      },
+      {
+        "name": "Prabhsimran Singh",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Shashank Singh",
+        "role": "Batsman"
+      },
+      {
+        "name": "Marcus Stoinis",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Harpreet Brar",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Marco Jansen",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Azmatullah Omarzai",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Priyansh Arya",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Musheer Khan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Suryansh Shedge",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mitch Owen",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Cooper Connolly",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ben Dwarshuis",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Arshdeep Singh",
+        "role": "Bowler"
+      },
+      {
+        "name": "Yuzvendra Chahal",
+        "role": "Bowler"
+      },
+      {
+        "name": "Vyshak Vijaykumar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Yash Thakur",
+        "role": "Bowler"
+      },
+      {
+        "name": "Xavier Bartlett",
+        "role": "Bowler"
+      },
+      {
+        "name": "Pravin Dubey",
+        "role": "Bowler"
+      },
+      {
+        "name": "Vishal Nishad",
+        "role": "Bowler"
+      },
+      {
+        "name": "Lockie Ferguson",
+        "role": "Bowler"
+      }
+    ],
+    "Rajasthan Royals": [
+      {
+        "name": "Shubham Dubey",
+        "role": "Batsman"
+      },
+      {
+        "name": "Vaibhav Suryavanshi",
+        "role": "Batsman"
+      },
+      {
+        "name": "Donovan Ferreira",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Lhuan-dre Pretorious",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Ravi Singh",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Aman Rao Perala",
+        "role": "Batsman"
+      },
+      {
+        "name": "Shimron Hetmyer",
+        "role": "Batsman"
+      },
+      {
+        "name": "Yashasvi Jaiswal",
+        "role": "Batsman"
+      },
+      {
+        "name": "Dhruv Jurel",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Riyan Parag",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Yudhvir Singh Charak",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Ravindra Jadeja",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Dasun Shanaka",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Jofra Archer",
+        "role": "Bowler"
+      },
+      {
+        "name": "Tushar Deshpande",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kwena Maphaka",
+        "role": "Bowler"
+      },
+      {
+        "name": "Ravi Bishnoi",
+        "role": "Bowler"
+      },
+      {
+        "name": "Sushant Mishra",
+        "role": "Bowler"
+      },
+      {
+        "name": "Yash Raj Punja",
+        "role": "Bowler"
+      },
+      {
+        "name": "Vignesh Puthur",
+        "role": "Bowler"
+      },
+      {
+        "name": "Brijesh Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Adam Milne",
+        "role": "Bowler"
+      },
+      {
+        "name": "Kuldeep Sen",
+        "role": "Bowler"
+      },
+      {
+        "name": "Sandeep Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Nandre Burger",
+        "role": "Bowler"
+      }
+    ],
+    "Royal Challengers Bengaluru": [
+      {
+        "name": "Rajat Patidar",
+        "role": "Batsman"
+      },
+      {
+        "name": "Devdutt Padikkal",
+        "role": "Batsman"
+      },
+      {
+        "name": "Virat Kohli",
+        "role": "Batsman"
+      },
+      {
+        "name": "Phil Salt",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Jitesh Sharma",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Jordan Cox",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Krunal Pandya",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Swapnil Singh",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Tim David",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Romario Shepherd",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Jacob Bethell",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Venkatesh Iyer",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Satvik Deswal",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Mangesh Yadav",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Vicky Ostwal",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Vihaan Malhotra",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Kanishk Chouhan",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Josh Hazlewood",
+        "role": "Bowler"
+      },
+      {
+        "name": "Rasikh Dar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Suyash Sharma",
+        "role": "Bowler"
+      },
+      {
+        "name": "Bhuvneshwar Kumar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Nuwan Thushara",
+        "role": "Bowler"
+      },
+      {
+        "name": "Abhinandan Singh",
+        "role": "Bowler"
+      },
+      {
+        "name": "Jacob Duffy",
+        "role": "Bowler"
+      },
+      {
+        "name": "Yash Dayal",
+        "role": "Bowler"
+      }
+    ],
+    "Sunrisers Hyderabad": [
+      {
+        "name": "Ishan Kishan",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Aniket Verma",
+        "role": "Batsman"
+      },
+      {
+        "name": "Smaran Ravichandran",
+        "role": "Batsman"
+      },
+      {
+        "name": "Salil Arora",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Heinrich Klaasen",
+        "role": "Wicketkeeper"
+      },
+      {
+        "name": "Travis Head",
+        "role": "Batsman"
+      },
+      {
+        "name": "Harshal Patel",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Kamindu Mendis",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Harsh Dubey",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Brydon Carse",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Shivang Kumar",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Krains Fuletra",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Liam Livingstone",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "David Payne",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Abhishek Sharma",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Nitish Kumar Reddy",
+        "role": "All-Rounder"
+      },
+      {
+        "name": "Pat Cummins",
+        "role": "Bowler"
+      },
+      {
+        "name": "Zeeshan Ansari",
+        "role": "Bowler"
+      },
+      {
+        "name": "Jaydev Unadkat",
+        "role": "Bowler"
+      },
+      {
+        "name": "Eshan Malinga",
+        "role": "Bowler"
+      },
+      {
+        "name": "Sakib Hussain",
+        "role": "Bowler"
+      },
+      {
+        "name": "Onkar Tarmale",
+        "role": "Bowler"
+      },
+      {
+        "name": "Amit Kumar",
+        "role": "Bowler"
+      },
+      {
+        "name": "Praful Hinge",
+        "role": "Bowler"
+      },
+      {
+        "name": "Shivam Mavi",
+        "role": "Bowler"
+      }
+    ]
+  }
+}

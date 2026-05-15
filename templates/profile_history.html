@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card card-pad animate-in" style="max-width: 900px; margin: 0 auto;">
+    <div class="section-header">
+        <div>
+            <div class="section-title">Match History</div>
+            <div class="tag">All completed matches</div>
+        </div>
+        <a href="{{ url_for('main.profile') }}" class="btn btn-ghost btn-sm">Back to profile</a>
+    </div>
+
+    <div class="match-history-list">
+        {% for entry in history %}
+        <div class="match-history-row">
+            <div class="match-history-index">{{ loop.index }}</div>
+            <div class="match-history-name">
+                {{ entry.label }}
+                {% if entry.winner %}
+                <span class="win-mark">WIN</span>
+                {% endif %}
+            </div>
+            <div class="match-history-points">{{ entry.points }} pts</div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No matches yet.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

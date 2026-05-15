@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section-header">
+    <div class="section-title">Match Standings</div>
+    <span class="tag">Winner points for each completed match</span>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:0.75rem">
+    {% for block in standings %}
+    <details class="match-expand"{% if loop.first %} open{% endif %}>
+        <summary class="match-expand-header">
+            <div>
+                <div class="text-xs text-dim mb-1">{{ block.match.start_time_ist.strftime('%d %b %Y %H:%M') }} IST</div>
+                <div class="fw-bold">{{ block.match.display_name }}</div>
+            </div>
+            <span class="expand-icon">+</span>
+        </summary>
+        <div class="match-expand-body">
+            {% for entry in block.entries %}
+            <div class="winner-row">
+                <div class="rank-num">{{ loop.index }}</div>
+                <div class="rank-avatar">
+                    <img src="{{ url_for('static', filename='uploads/avatars/' ~ entry.user.avatar_path) if entry.user.avatar_path else url_for('static', filename='images/avatar-placeholder.svg') }}" alt="{{ entry.user.username }}" />
+                </div>
+                <span class="fw-bold text-sm">{{ entry.user.username }}</span>
+                <span class="rank-pts" style="margin-left:auto">{{ entry.match_points }} pts</span>
+            </div>
+            {% else %}
+            <div class="text-dim text-sm">No standings available yet.</div>
+            {% endfor %}
+        </div>
+    </details>
+    {% else %}
+    <div class="text-dim text-sm">No completed matches yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}
+

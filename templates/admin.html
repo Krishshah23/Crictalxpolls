@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="admin-3col animate-in">
+    <div class="admin-stat"><div class="admin-stat-val">{{ user_count }}</div><div class="admin-stat-lbl">Users</div></div>
+    <div class="admin-stat"><div class="admin-stat-val">{{ match_count }}</div><div class="admin-stat-lbl">Matches</div></div>
+    <div class="admin-stat"><div class="admin-stat-val">{{ poll_count }}</div><div class="admin-stat-lbl">Polls</div></div>
+</div>
+
+<div class="admin-activity-grid animate-in">
+    {% for row in admin_activity %}
+    <div class="admin-activity-card">
+        <div class="admin-activity-name">{{ row.username }}</div>
+        <div class="admin-activity-metrics">
+            <div>
+                <div class="admin-activity-label">Last 7 days</div>
+                <div class="admin-activity-value text-acid">{{ row.last_week }}</div>
+            </div>
+            <div>
+                <div class="admin-activity-label">Total</div>
+                <div class="admin-activity-value">{{ row.total }}</div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-dim text-sm">No admin activity yet.</div>
+    {% endfor %}
+</div>
+
+<div class="card card-pad admin-action-summary">
+    <div class="section-header">
+        <div class="section-title">Audit Summary</div>
+        <span class="tag">By action type</span>
+    </div>
+    <div class="action-summary-grid">
+        {% for row in action_breakdown %}
+        <div class="action-summary-card">
+            <div class="action-summary-label">{{ row.action }}</div>
+            <div class="action-summary-value text-acid">{{ row.total }}</div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No actions logged yet.</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="admin-grid mt-3">
+    <div class="card card-pad">
+        <div class="tag mb-2">Users</div>
+        <div class="admin-preview-list">
+            {% for user in users %}
+            <div class="rank-row">
+                <div class="rank-avatar">
+                    <img src="{{ url_for('static', filename='uploads/avatars/' ~ user.avatar_path) if user.avatar_path else url_for('static', filename='images/avatar-placeholder.svg') }}" alt="{{ user.username }}" />
+                </div>
+                <div class="rank-name">{{ user.username }}</div>
+                <div class="text-xs text-dim">{{ 'Admin' if user.is_admin else 'Player' }}</div>
+                {% if not user.is_admin %}
+                <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="margin-left:auto">
+                    <button class="btn btn-fire btn-sm" type="submit">Remove</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <form method="POST" action="{{ url_for('admin.run_points') }}">
+            <button class="btn btn-acid" type="submit">Run Points Calculation</button>
+        </form>
+    </div>
+
+    <div class="card card-pad">
+        <div class="tag mb-2">Matches</div>
+        <div id="admin-matches-list" class="admin-preview-list">
+            {% for match in matches %}
+            <div class="match-card admin-preview-item {% if loop.index > 2 %}admin-preview-hidden{% endif %}" style="padding:1rem">
+            <div class="match-teams">{{ match.display_name }}</div>
+            <div class="match-meta">{{ match.start_time_ist.strftime('%d %b %Y %H:%M') }} IST</div>
+            <div class="match-actions">
+                <form method="POST" action="{{ url_for('admin.delete_match', match_id=match.id) }}">
+                    <button class="btn btn-fire btn-sm" type="submit">Delete</button>
+                </form>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if matches|length > 2 %}
+        <button class="btn btn-ghost btn-sm admin-view-toggle" type="button" data-toggle-target="admin-matches-list">View all</button>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card card-pad admin-audit">
+    <div class="section-header">
+        <div class="section-title">Admin Audit Log</div>
+        <a href="{{ url_for('admin.export_votes') }}" class="btn btn-ghost btn-sm">Export All Votes</a>
+    </div>
+    <div class="audit-list">
+        {% for log in audit_logs %}
+        <div class="audit-row">
+            <div>
+                <div class="fw-bold">{{ log.action | upper }} {{ log.entity }}</div>
+                <div class="text-xs text-dim">{{ log.detail or 'No detail' }}</div>
+            </div>
+            <div class="audit-meta">
+                <div class="text-xs text-dim">{{ log.admin.username }}</div>
+                <div class="text-xs text-dim">{{ log.created_at.strftime('%d %b %Y %H:%M') }}</div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-dim text-sm">No audit activity yet.</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="admin-grid animate-in delay-1">
+    <div class="card card-pad">
+        <div class="tag mb-3">Add Match</div>
+        <form method="POST" action="{{ url_for('admin.add_match') }}">
+            <div class="form-group">
+                <label class="form-label">Team A</label>
+                <select name="team_a" class="form-input">
+                    <option value="">Select Team A</option>
+                    {% for team in teams %}
+                    <option value="{{ team }}">{{ team }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Team B</label>
+                <select name="team_b" class="form-input">
+                    <option value="">Select Team B</option>
+                    {% for team in teams %}
+                    <option value="{{ team }}">{{ team }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Start Time</label>
+                <input name="start_time" type="datetime-local" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">End Time</label>
+                <input name="end_time" type="datetime-local" class="form-input" />
+            </div>
+            <button class="btn btn-acid" type="submit">Create Match</button>
+        </form>
+    </div>
+
+    <div class="card card-pad">
+        <div class="tag mb-3">Add Custom Poll</div>
+        <form method="POST" action="{{ url_for('admin.add_poll') }}">
+            <div class="form-group">
+                <label class="form-label">Match</label>
+                <select name="match_id" class="form-input">
+                    {% for match in matches %}
+                    <option value="{{ match.id }}">{{ match.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Question</label>
+                <input name="question" placeholder="Question" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Options</label>
+                <select name="option_source" class="form-input">
+                    <option value="custom">Custom (comma separated)</option>
+                    <option value="team_a_batsmen">Team A - Batsmen/Wicketkeepers</option>
+                    <option value="team_b_batsmen">Team B - Batsmen/Wicketkeepers</option>
+                    <option value="team_a_all_rounders">Team A - All Rounders</option>
+                    <option value="team_b_all_rounders">Team B - All Rounders</option>
+                    <option value="team_a_bowlers">Team A - Bowlers</option>
+                    <option value="team_b_bowlers">Team B - Bowlers</option>
+                    <option value="team_a_all">Team A - All Players</option>
+                    <option value="team_b_all">Team B - All Players</option>
+                    <option value="both_teams_all">Both Teams - All Players</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Custom Options</label>
+                <input name="options" placeholder="Options (comma separated)" class="form-input" />
+            </div>
+            <button class="btn btn-acid" type="submit">Add Poll</button>
+        </form>
+    </div>
+
+    <div class="card card-pad admin-span">
+        <div class="tag mb-3">Add Player</div>
+        <form method="POST" action="{{ url_for('admin.add_player') }}">
+            <div class="form-group">
+                <label class="form-label">Player Name</label>
+                <input name="name" placeholder="Player name" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Team</label>
+                <select name="team" class="form-input">
+                    <option value="">Select Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team }}">{{ team }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Role</label>
+                <select name="role" class="form-input">
+                    {% for role in roles %}
+                    <option value="{{ role }}">{{ role }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-acid" type="submit">Add Player</button>
+        </form>
+    </div>
+
+    <div class="card card-pad admin-span">
+        <div class="tag mb-3">IPL Team Rosters</div>
+        <div id="admin-rosters-list" class="admin-preview-grid">
+            {% for team, grouped in rosters.items() %}
+            <div class="card card-pad admin-preview-item {% if loop.index > 3 %}admin-preview-hidden{% endif %}">
+                <div class="fw-bold text-acid mb-2" style="font-size:0.85rem">{{ team }}</div>
+                {% for role, role_players in grouped.items() %}
+                <div class="text-xs text-dim mb-1" style="letter-spacing:1px;text-transform:uppercase">{{ role }}</div>
+                <div class="text-sm mb-2">
+                    {% if role_players %}
+                        {{ role_players | map(attribute='name') | join(', ') }}
+                    {% else %}
+                        <span class="text-dim">No players</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if rosters|length > 3 %}
+        <button class="btn btn-ghost btn-sm admin-view-toggle" type="button" data-toggle-target="admin-rosters-list">View all</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-toggle-target]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-toggle-target');
+                const container = document.getElementById(targetId);
+                if (!container) {
+                    return;
+                }
+                const isExpanded = button.getAttribute('data-expanded') === 'true';
+                container.classList.toggle('admin-preview-expanded', !isExpanded);
+                button.textContent = isExpanded ? 'View all' : 'Show less';
+                button.setAttribute('data-expanded', isExpanded ? 'false' : 'true');
+            });
+        });
+    });
+</script>
+{% endblock %}
+

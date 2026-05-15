@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section-header">
+    <div class="section-title">Results</div>
+    <span class="tag">Completed match outcomes</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:0.75rem">
+    {% for item in results %}
+    <div class="match-card">
+        <div class="share-card" data-share-card data-share-theme="bold">
+            <div class="share-header">CRICTALX POLLS</div>
+            <div class="share-user">
+                <img src="{{ url_for('static', filename='uploads/avatars/' ~ current_user.avatar_path) if current_user.avatar_path else url_for('static', filename='images/avatar-placeholder.svg') }}" alt="{{ current_user.username }}" />
+                <div>
+                    <div class="share-user-name">{{ current_user.username }}</div>
+                    <div class="share-user-handle">@{{ current_user.username }}</div>
+                </div>
+            </div>
+            <div class="share-stats">
+                <div class="share-stat">
+                    <div class="share-stat-label">Rank in match</div>
+                    <div class="share-stat-value">{% if item.user_highlight.match_rank %}#{{ item.user_highlight.match_rank }}{% else %}--{% endif %}</div>
+                </div>
+                <div class="share-stat">
+                    <div class="share-stat-label">Your points</div>
+                    <div class="share-stat-value text-acid">{{ item.user_highlight.match_points }}</div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="match-teams">{{ item.match.display_name }}</div>
+                    <div class="match-meta">Completed</div>
+                </div>
+                <span class="badge badge-ice">Final</span>
+            </div>
+            <div class="instant-highlight">
+                <div class="instant-title">Your Highlights</div>
+                {% if item.user_highlight.total > 0 %}
+                <div class="instant-grid">
+                    <div class="instant-pill">
+                        <div class="instant-label">Accuracy</div>
+                        <div class="instant-value">{{ item.user_highlight.accuracy }}%</div>
+                    </div>
+                    <div class="instant-pill">
+                        <div class="instant-label">Correct</div>
+                        <div class="instant-value text-acid">{{ item.user_highlight.correct }}</div>
+                    </div>
+                    <div class="instant-pill">
+                        <div class="instant-label">Incorrect</div>
+                        <div class="instant-value text-fire">{{ item.user_highlight.incorrect }}</div>
+                    </div>
+                    <div class="instant-pill">
+                        <div class="instant-label">Pending</div>
+                        <div class="instant-value">{{ item.user_highlight.pending }}</div>
+                    </div>
+                </div>
+                <div class="instant-hero">
+                    {% if item.user_highlight.biggest_win %}
+                    <div class="instant-card">
+                        <div class="instant-tag text-acid">Biggest Win</div>
+                        <div class="instant-question">{{ item.user_highlight.biggest_win.question }}</div>
+                        <div class="instant-option">{{ item.user_highlight.biggest_win.option }}</div>
+                        <div class="instant-points text-acid">+{{ item.user_highlight.biggest_win.points }} pts</div>
+                    </div>
+                    {% else %}
+                    <div class="instant-card">
+                        <div class="instant-tag text-acid">Biggest Win</div>
+                        <div class="instant-question">No winning picks yet</div>
+                        <div class="instant-option text-dim">Make picks to see highlights.</div>
+                    </div>
+                    {% endif %}
+                    {% if item.user_highlight.biggest_miss %}
+                    <div class="instant-card">
+                        <div class="instant-tag text-fire">Biggest Miss</div>
+                        <div class="instant-question">{{ item.user_highlight.biggest_miss.question }}</div>
+                        <div class="instant-option">{{ item.user_highlight.biggest_miss.option }}</div>
+                        <div class="instant-points text-fire">{{ item.user_highlight.biggest_miss.points }} pts</div>
+                    </div>
+                    {% else %}
+                    <div class="instant-card">
+                        <div class="instant-tag text-fire">Biggest Miss</div>
+                        <div class="instant-question">No misses yet</div>
+                        <div class="instant-option text-dim">Keep the streak alive.</div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="text-dim text-sm">No picks for this match yet.</div>
+                {% endif %}
+            </div>
+            {% if item.spotlight %}
+            <div class="mt-2">
+                <div class="tag">Winner Spotlight</div>
+                <div class="fw-bold">{{ item.spotlight.username }} · {{ item.spotlight.points }} pts</div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="share-bar">
+            <div class="text-xs text-dim">Share your recap</div>
+            <div class="share-theme" data-share-theme-toggle>
+                <button class="btn btn-ghost btn-sm" type="button" data-theme-option data-theme-value="minimal">Minimal</button>
+                <button class="btn btn-ghost btn-sm active" type="button" data-theme-option data-theme-value="bold">Bold</button>
+            </div>
+            <button class="btn btn-ghost btn-sm" type="button" data-share-button>Share</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-share-image>Share Image</button>
+            <div class="share-text" data-share-text>
+                Crictalx Results - {{ item.match.display_name }}
+                {% if item.user_highlight.total > 0 %}
+                Accuracy: {{ item.user_highlight.accuracy }}%
+                Correct: {{ item.user_highlight.correct }} | Incorrect: {{ item.user_highlight.incorrect }} | Pending: {{ item.user_highlight.pending }}
+                {% if item.user_highlight.biggest_win %}
+                Biggest Win: {{ item.user_highlight.biggest_win.question }} - {{ item.user_highlight.biggest_win.option }} (+{{ item.user_highlight.biggest_win.points }} pts)
+                {% endif %}
+                {% if item.user_highlight.biggest_miss %}
+                Biggest Miss: {{ item.user_highlight.biggest_miss.question }} - {{ item.user_highlight.biggest_miss.option }} ({{ item.user_highlight.biggest_miss.points }} pts)
+                {% endif %}
+                {% else %}
+                No picks submitted for this match yet.
+                {% endif %}
+            </div>
+        </div>
+        <div class="match-actions">
+            <a href="{{ url_for('main.match_detail', match_id=item.match.id) }}" class="btn btn-ghost btn-sm">View match polls</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-dim text-sm">No completed matches yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+{% endblock %}
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Crictalx Polls</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/newdesign.css') }}" />
+</head>
+<body>
+    <div id="page-login" class="auth-page">
+        <div class="auth-ticker">
+            <div class="ticker-inner">
+                <div class="ticker-item">IPL 2026</div>
+                <div class="ticker-item">Make your picks</div>
+                <div class="ticker-item">Beat your rivals</div>
+                <div class="ticker-item">Climb the board</div>
+                <div class="ticker-item">Crictalx Polls</div>
+                <div class="ticker-item">IPL 2026</div>
+                <div class="ticker-item">Make your picks</div>
+                <div class="ticker-item">Beat your rivals</div>
+                <div class="ticker-item">Climb the board</div>
+                <div class="ticker-item">Crictalx Polls</div>
+            </div>
+        </div>
+        <div class="auth-split">
+            <div class="auth-left">
+                <div class="auth-left-inner">
+                    <div class="auth-brand">
+                        <span class="brand-mark">CX</span>
+                        <span class="brand-text">CRICTALX POLLS</span>
+                    </div>
+                    <div class="auth-illustration" aria-hidden="true">
+                        <svg viewBox="0 0 280 200" role="img" aria-label="Cricket stumps and ball">
+                            <rect x="18" y="150" width="244" height="18" fill="#111111" />
+                            <rect x="30" y="150" width="220" height="2" fill="rgba(200,255,0,0.18)" />
+                            <rect x="42" y="46" width="14" height="104" fill="#2a2a2a" />
+                            <rect x="66" y="46" width="14" height="104" fill="#343434" />
+                            <rect x="90" y="46" width="14" height="104" fill="#2a2a2a" />
+                            <rect x="40" y="40" width="68" height="6" fill="#1a1a1a" />
+                            <rect x="48" y="36" width="20" height="4" fill="#1f1f1f" />
+                            <rect x="80" y="36" width="20" height="4" fill="#1f1f1f" />
+                            <circle cx="198" cy="126" r="16" fill="#c8ff00" />
+                            <circle cx="198" cy="126" r="28" fill="rgba(200,255,0,0.08)" />
+                            <path d="M188 126 Q198 118 208 126" stroke="#0c0c0c" stroke-width="2" fill="none" />
+                            <path d="M188 126 Q198 134 208 126" stroke="#0c0c0c" stroke-width="2" fill="none" />
+                        </svg>
+                    </div>
+                    <div class="auth-headline">JOIN THE POLL LEAGUE</div>
+                    <div class="auth-sub">Create your handle to start stacking points.</div>
+                    <div class="auth-pills">
+                        <span class="auth-pill">Daily Picks</span>
+                        <span class="auth-pill">Season Points</span>
+                        <span class="auth-pill">Rival Gaps</span>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-right">
+                <div class="auth-form">
+                    <div class="auth-eyebrow">Sign Up</div>
+                    <div class="auth-title">Create Your Handle</div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="form-error" style="display:block">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input class="form-input" name="username" type="text" placeholder="pick a handle">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input class="form-input" name="password" type="password" placeholder="create a password">
+                        </div>
+                        <button class="btn btn-acid btn-lg" style="width:100%;justify-content:center" type="submit">Create Account -></button>
+                    </form>
+                    <div class="auth-switch">
+                        Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
+                    </div>
+                    <div class="auth-stats">
+                        <div class="auth-chip">
+                            <div class="chip-label">Players</div>
+                            <div class="chip-value">{{ auth_stats.players }}</div>
+                        </div>
+                        <div class="auth-chip">
+                            <div class="chip-label">Total Votes</div>
+                            <div class="chip-value">{{ auth_stats.total_votes }}</div>
+                        </div>
+                        <div class="auth-chip">
+                            <div class="chip-label">Top Score</div>
+                            <div class="chip-value">{{ auth_stats.top_score }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

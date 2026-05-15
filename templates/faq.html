@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-shell animate-in">
+    <section class="page-hero animate-in delay-1">
+        <span class="page-kicker">💡 Help Center</span>
+        <h1 class="page-title">FREQUENTLY ASKED QUESTIONS</h1>
+        <p class="page-subtitle">Everything you need to know about Crictalx Polls</p>
+    </section>
+
+    <section class="page-section">
+        {% for item in faq_items %}
+        <div class="card card-pad info-card mt-1">
+            <details>
+                <summary class="faq-summary">
+                    <span class="faq-summary-marker">▶</span>
+                    <span>{{ item.question }}</span>
+                </summary>
+                <div class="faq-answer">{{ item.answer }}</div>
+            </details>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="page-section" style="padding-top: 0; padding-bottom: 3rem;">
+        <div class="card card-pad info-card" style="text-align: center;">
+            <h3 style="margin-bottom: 1rem; font-size: 1.2rem; color: var(--acid);">Can't find the answer?</h3>
+            <p style="color: var(--dim); margin-bottom: 1.5rem;">
+                Reach out to us directly via email or social media.
+            </p>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-acid">Contact Us</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

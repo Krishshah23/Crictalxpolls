@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="section-header">
+    <div class="section-title">Teams</div>
+    <span class="tag">Squads + pick trends</span>
+</div>
+
+<div class="teams-grid">
+    {% for team in teams %}
+    <a class="team-card" href="{{ url_for('main.team_detail', team_name=team.name) }}">
+        <div class="team-card-header">
+            <div class="team-name">{{ team.name }}</div>
+            <span class="team-pill">{{ team.players }} players</span>
+        </div>
+        <div class="team-meta">
+            <div class="team-meta-row">
+                <span class="team-meta-label">Upcoming</span>
+                <span class="team-meta-value text-acid">{{ team.upcoming }}</span>
+            </div>
+            <div class="team-meta-row">
+                <span class="team-meta-label">Completed</span>
+                <span class="team-meta-value">{{ team.completed }}</span>
+            </div>
+        </div>
+        <div class="team-cta">View team -></div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
